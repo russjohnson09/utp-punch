@@ -16,13 +16,32 @@ function createLocal(server)
   client = new Node();
   client.bind(); // bind to any port
   client.connect(server.port, server.host, socket => {
+    const address = socket.address();
+
+
     console.log('client: socket connected');
-    socket.on('data', data => console.log(`client: received '${data.toString()}'`));
+    socket.on('data', function(data) {
+      const text = data.toString();
+
+      console.log(
+        `client: received '${text}' from ${address.address}:${address.port}`
+      );
+
+      console.log(`client: received '${data.toString()}'`);
+
+      if (text === 'PONG') {
+        setTimeout(() => {
+          console.log('client: sending PING...');
+          socket.write('PING');
+        }, 3000);
+
+      }
+    });
     socket.on('end', () => {
       console.log('client: socket disconnected');
       client.close(); // this is how you terminate node
     });
-    socket.write('hello');
+    socket.write('PING');
   });
 }
 
