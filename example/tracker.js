@@ -54,4 +54,5 @@ if (!process.argv[2]) {
   process.exit(2);
 }
 
-tracker.bind(42000, process.argv[2]);
+let PORT = process.env.port || 55500;
+tracker.bind(PORT, process.argv[2]);
