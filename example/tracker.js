@@ -46,7 +46,7 @@ tracker.on('message', (msg, rinfo) => {
         }
         );
       let serverObject = Object.assign({},
-        client,
+        server,
         {
           address: `127.0.0.1`
         }

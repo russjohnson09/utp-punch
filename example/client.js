@@ -9,6 +9,23 @@ if (!process.argv[2]) {
 const trackerPort = 55500;
 let client = new Node();
 
+
+function createLocal(server)
+{
+  console.log(`create local connection`,server);
+  client = new Node();
+  client.bind(); // bind to any port
+  client.connect(server.port, server.host, socket => {
+    console.log('client: socket connected');
+    socket.on('data', data => console.log(`client: received '${data.toString()}'`));
+    socket.on('end', () => {
+      console.log('client: socket disconnected');
+      client.close(); // this is how you terminate node
+    });
+    socket.write('hello');
+  });
+}
+
 const onConnected = socket => {
   console.log('client: UTP socket is connected to the server');
   const address = socket.address();
@@ -52,21 +69,33 @@ const onReady = () => {
         process.exit(1);
       }
 
-      console.log(
-        `client: punching a hole to ${server.address}:${server.port}...`
-      );
-      client.punch(10, server.port, server.address, success => {
-        console.log(
-          `client: punching result: ${success ? 'success' : 'failure'}`
-        );
-        if (!success) process.exit(1);
 
-        client.on('timeout', () => {
-          console.log('client: connect timeout');
-          process.exit(1);
+      if (server.address === `127.0.0.1`)
+      {
+        // console.log(`no punch necessary`);
+        // client.connect(server.port, server.address, onConnected);
+
+        createLocal(server);
+
+      }
+      else {
+        console.log(
+          `client: punching a hole to ${server.address}:${server.port}...`
+        );
+        client.punch(10, server.port, server.address, success => {
+          console.log(
+            `client: punching result: ${success ? 'success' : 'failure'}`
+          );
+          if (!success) process.exit(1);
+
+          client.on('timeout', () => {
+            console.log('client: connect timeout');
+            process.exit(1);
+          });
+          client.connect(server.port, server.address, onConnected);
         });
-        client.connect(server.port, server.address, onConnected);
-      });
+      }
+
     }
   };
 
