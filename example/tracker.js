@@ -39,8 +39,20 @@ tracker.on('message', (msg, rinfo) => {
     if (server.address === client.address)
     {
       console.log(`addresses match sending 127.0.0.1 to both`);
-      tracker.send(JSON.stringify(client), server.port, `127.0.0.1`);
-      tracker.send(JSON.stringify(server), client.port, `127.0.0.1`);
+      let clientObject = Object.assign({},
+        client,
+        {
+          address: `127.0.0.1`
+        }
+        );
+      let serverObject = Object.assign({},
+        client,
+        {
+          address: `127.0.0.1`
+        }
+      )
+      tracker.send(JSON.stringify(clientObject), server.port, server.address);
+      tracker.send(JSON.stringify(serverObject), client.port, client.address);
     }
     else {
       tracker.send(JSON.stringify(client), server.port, server.address);
