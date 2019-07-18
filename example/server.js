@@ -6,7 +6,7 @@ if (!process.argv[2]) {
   process.exit(2);
 }
 
-const trackerPort = 42000;
+const trackerPort = 55500;
 let server = new Node(socket => {
   console.log('server: UTP client is connected');
   const address = socket.address();
@@ -69,5 +69,5 @@ const onListening = () => {
   );
 };
 
-server.bind(9000);
+server.bind(55501);
 server.listen(onListening);

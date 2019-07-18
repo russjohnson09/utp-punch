@@ -10,6 +10,8 @@ aws 52.206.232.250
 
 ```
 node example/tracker.js 52.206.232.250
+node example/tracker.js 0.0.0.0
+
 ```
 
 4. Run on first VM:

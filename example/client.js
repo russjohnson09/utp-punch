@@ -6,7 +6,7 @@ if (!process.argv[2]) {
   process.exit(2);
 }
 
-const trackerPort = 42000;
+const trackerPort = 55500;
 let client = new Node();
 
 const onConnected = socket => {
@@ -79,4 +79,4 @@ const onReady = () => {
   );
 };
 
-client.bind(9000, onReady);
+client.bind(55502, onReady);

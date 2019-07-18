@@ -36,8 +36,17 @@ tracker.on('message', (msg, rinfo) => {
 
   if (server && client) {
     console.log('both peers are ready, exchanging the addresses');
-    tracker.send(JSON.stringify(client), server.port, server.address);
-    tracker.send(JSON.stringify(server), client.port, client.address);
+    if (server.address === client.address)
+    {
+      console.log(`addresses match sending 127.0.0.1 to both`);
+      tracker.send(JSON.stringify(client), server.port, `127.0.0.1`);
+      tracker.send(JSON.stringify(server), client.port, `127.0.0.1`);
+    }
+    else {
+      tracker.send(JSON.stringify(client), server.port, server.address);
+      tracker.send(JSON.stringify(server), client.port, client.address);
+    }
+
     server = null;
     client = null;
   }
